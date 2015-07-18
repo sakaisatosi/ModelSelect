@@ -1,9 +1,12 @@
 # ModelSelect
-自動的にモデル選択をするためのRパッケージ
+ModelSelect is an R package to select forecast model by AIC. 
 
-## インストール
+## Installation
+You can install ModelSelect from github using the devtools package
 
 ```
 require(devtools)
 install_github('sakaisatosi/ModelSelect')
 ```
+
+

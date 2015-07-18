@@ -2,7 +2,7 @@
 % Please edit documentation in R/getModel.R
 \name{CompareModel}
 \alias{CompareModel}
-\title{Get good model}
+\title{model comparison}
 \usage{
 CompareModel(y, x1, x2)
 }
@@ -13,10 +13,7 @@ CompareModel(y, x1, x2)
 
 \item{x2}{second explanatory variable}
 }
-\value{
-good model
-}
 \description{
-Get good model
+model comparison
 }
 

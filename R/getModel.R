@@ -1,10 +1,10 @@
-#' Get good model
+#' model comparison
 #' 
 #' @param y objective variable
 #' @param x1 first explanatory variable
 #' @param x2 second explanatory variable
 #' 
-#' @return good model
+#' 
 #'
 #' @export
 CompareModel <- function(y, x1, x2) {

@@ -7,13 +7,21 @@
 #' @return good model
 #'
 #' @export
-getLmModel <- function(y, x1, x2) {
+CompareModel <- function(y, x1, x2) {
   model.single <- lm(y ~ x1)
   model.multi <- lm(y ~ x1 + x2)
-  
+  # AICの小さい方を返す
   if (AIC(model.single) > AIC(model.multi)){
-    AIC(model.multi)
+    cat("Single Regression\n AIC: \n")
+    print(AIC(model.multi))
+    cat("\nMulti Regression\n AIC: \n")
+    print(AIC(model.single))
+    cat("\nSingle regression is better")
   } else {
-    AIC(model.single)
+    cat("Single Regression\n AIC: \n")
+    print(AIC(model.multi))
+    cat("\nMulti Regression\n AIC: \n")
+    print(AIC(model.single))
+    cat("\nMulti regression is better")
   }
 }

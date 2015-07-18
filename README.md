@@ -3,8 +3,7 @@
 
 ## インストール
 
-'''
+```
 require(devtools)
 install_github('sakaisatosi/ModelSelect')
-'''
-
+```

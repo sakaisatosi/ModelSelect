@@ -4,4 +4,5 @@
 #'
 #' @name ModelSelect
 #' @docType package
+#' @import mgcv
 NULL

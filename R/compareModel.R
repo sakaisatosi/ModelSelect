@@ -12,7 +12,52 @@ compareModel <- function(y, x1) {
   # eroorを消す
   # options(show.error.messages = FALSE)
   
-  # モデルを構築する
+  # 応答変数が離散値か連続値か判定する
+  # 応答変数が連続値の場合はcontinuity.flagにTRUEが入る
+  continuity.flag <- TRUE
+  for (i in 1:length(y)){
+    if(round(y[i]) != y[i]) {
+      continuity.flag <- TRUE
+      break
+    }else{
+      continuity.flag <- FALSE
+    }
+  }
+  
+  # 応答変数に負の値があるか判定する
+  # positive.flagがTRUEの時、被説明変数は全て正の数
+  positive.flag <- FALSE
+  for (i in 1:length(y)){
+    if(y[i] > 0) {
+      positive.flag <- TRUE
+    }else{
+      positive.flag <- FALSE
+      break
+    }
+  }
+  
+  # モデル構築
+  
+  # 応答変数の性質によるモデル構築
+  if(continuity.flag && positive.flag){
+    cat("応答変数を連続値で正の値と判断しました\n")
+    
+    # ガンマ分布
+    e.gamma <- try(model.gamma <- glm(y ~ x1, family = Gamma))
+    
+    if(class(e.gamma) != "try-error"){
+      cat("Gamma model's AIC:")
+      print(AIC(model.gamma))
+    }
+    
+  }else if(continuity.flag && !positive.flag){
+    cat("応答変数を連続値と判断しました")
+  }else if(!continuity.flag && positive.flag){
+    cat("応答変数を離散値で正の値と判断しました")
+  }else if(!continuity.flag && !positive.flag){
+    cat("応答変数を離散値と判断しました")
+  }
+  
   # 単回帰
   e.lm <- try(model.lm <- gam(y ~ x1))
   # 平滑化スプライン
@@ -69,9 +114,9 @@ compareModel <- function(y, x1) {
     sum((y-yhat)^2)	# 残差平方和
   }
   e.logarithm <- try(model.logarithm <- nls(
-    y ~ a * log(x) + b, 
-    start = list(a = optim(c(-15, 25), resid)$par[1],
-                 b = optim(c(-15, 25), resid)$par[2])
+    y ~ a * log(x1) + b, 
+    start = list(a = optim(c(1, 25), resid)$par[1],
+                 b = optim(c(1, 25), resid)$par[2])
     )
   )
   

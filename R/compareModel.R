@@ -17,10 +17,31 @@ compareModel <- function(y, x1) {
   e.lm <- try(model.lm <- gam(y ~ x1))
   # 平滑化スプライン
   e.gam <- try(model.gam <- gam(y ~ s(x1)))
+  
   # 累乗モデル
-  e.power <- try(model.power <- nls(y ~ a * x1 ^ b, start = list(a = 1, b = 1)))
+  resid <- function(par){
+    yhat <- par[1] * x1 ^ par[2]
+    sum((y-yhat)^2)	# 残差平方和
+  }
+  e.power <- try(model.power <- nls(
+    y ~ a * x1 ^ b, 
+    start = list(a = optim(c(1, 1), resid)$par[1],
+                 b = optim(c(1, 1), resid)$par[2])
+    )
+  )
+  
   # 指数モデル
-  e.index <- try(model.index <- nls(y ~ a * b ^ x1, start = list(a = 1, b = 1)))
+  resid <- function(par){
+    yhat <- par[1] * par[2] ^ x1
+    sum((y-yhat)^2)	# 残差平方和
+  }
+  e.index <- try(model.index <- nls(
+    y ~ a * b ^ x1, 
+    start = list(a = optim(c(1, 1), resid)$par[1],
+                 b = optim(c(1, 1), resid)$par[2])
+    )
+  )
+
   # 漸近指数モデル
   e.asymptotic <- try(model.asymptotic <- nls(y ~ SSasymp(x1, Asymp, RO, lrc)))
   # ゴンペルツ成長モデル
@@ -29,10 +50,30 @@ compareModel <- function(y, x1) {
   e.logistic <- try(model.logistic <- glm(y ~ x1, binomial))
   # ポアソン回帰モデル
   e.poisson <- try(model.poisson <- glm(y ~ x1, family = poisson))
+  
   # 遅れS字曲線
-  e.delay <- try(model.delay <- nls(y ~ a * (1 - (1 + b * x1) * exp(-b * x1)), start = list(a = 1, b = 1)))
+  resid <- function(par){
+    yhat <- par[1] * (1 - (1 + par[2] * x1) * exp(-par[2] * x1))
+    sum((y-yhat)^2)	# 残差平方和
+  }
+  e.delay <- try(model.delay <- nls(
+    y ~ a * (1 - (1 + b * x1) * exp(-b * x1)), 
+    start = list(a = optim(c(1, 1), resid)$par[1],
+                 b = optim(c(1, 1), resid)$par[2])
+    )
+  )
+  
   # 対数近似
-  e.logarithm <- try(model.logarithm <- nls(y ~ a * log(x) + b, start = c(a = -15, b= 25)))
+  resid <- function(par){
+    yhat <- par[1] * log(x1) + par[2]
+    sum((y-yhat)^2)	# 残差平方和
+  }
+  e.logarithm <- try(model.logarithm <- nls(
+    y ~ a * log(x) + b, 
+    start = list(a = optim(c(-15, 25), resid)$par[1],
+                 b = optim(c(-15, 25), resid)$par[2])
+    )
+  )
   
   # AICを出力する
   if(class(e.lm) != "try-error"){

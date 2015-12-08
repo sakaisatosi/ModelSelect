@@ -4,14 +4,13 @@
 \alias{CompareModel}
 \title{model comparison}
 \usage{
-CompareModel(y, x1, x2)
+CompareModel(y, x1)
 }
 \arguments{
 \item{y}{objective variable}
 
 \item{x1}{first explanatory variable}
 
-\item{x2}{second explanatory variable}
 }
 \description{
 model comparison
